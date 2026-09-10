@@ -1,1 +1,3 @@
-<Solution />
+<Solution>
+  <Project Path="FCanteen.Data/FCanteen.Data.csproj" />
+</Solution>
