@@ -19,6 +19,7 @@ Console App dong vai tro quay thu ngan, cho phep nhap order va gui len may chu b
 ## Cau hinh
 
 File `appsettings.json`:
+
 ```json
 {
   "ConnectionStrings": {
@@ -36,13 +37,16 @@ File `appsettings.json`:
 ## Chay project
 
 ### Dieu kien tien quyet
+
 > **FCanteen.KitchenServer phai dang chay** truoc khi khoi dong PosClient
 
 ### Chay mot quay (trong Visual Studio)
+
 1. Chuot phai `FCanteen.PosClient` → **Set as Startup Project**
 2. Nhan **F5**
 
 ### Chay mot quay (Terminal)
+
 ```powershell
 cd C:\Users\RinHeo\Desktop\PRN222-FCanteen\FCanteen
 dotnet run --project FCanteen.PosClient -- QUAY01
@@ -51,11 +55,13 @@ dotnet run --project FCanteen.PosClient -- QUAY01
 ### Chay 3 quay cung luc (mo 3 cua so rieng)
 
 **Buoc 1**: Build truoc
+
 ```powershell
 dotnet build FCanteen.PosClient
 ```
 
 **Buoc 2**: Chay 3 instance cung luc
+
 ```powershell
 Start-Process "FCanteen.PosClient\bin\Debug\net8.0\FCanteen.PosClient.exe" -ArgumentList "QUAY01"
 Start-Process "FCanteen.PosClient\bin\Debug\net8.0\FCanteen.PosClient.exe" -ArgumentList "QUAY02"
@@ -63,7 +69,9 @@ Start-Process "FCanteen.PosClient\bin\Debug\net8.0\FCanteen.PosClient.exe" -Argu
 ```
 
 > Su dung `--no-build` de tranh loi file lock khi chay nhieu instance:
+>
 > ```powershell
+>
 > dotnet run --project FCanteen.PosClient --no-build -- QUAY02
 > ```
 
@@ -80,6 +88,20 @@ Start-Process "FCanteen.PosClient\bin\Debug\net8.0\FCanteen.PosClient.exe" -Argu
 6. Go "xong" de ket thuc nhap
 7. Xac nhan gui len bep (Y/n)
 8. Cho xac nhan tu server
+
+# Chay KitchenServer trong cua so moi
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd 'C:\Users\RinHeo\Desktop\PRN222-FCanteen\FCanteen'; dotnet run --project FCanteen.KitchenServer --no-build"
+
+# Doi 3 giay cho server khoi dong xong
+Start-Sleep -Seconds 3
+
+# Chay 3 quay trong 3 cua so rieng biet
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd 'C:\Users\RinHeo\Desktop\PRN222-FCanteen\FCanteen'; dotnet run --project FCanteen.PosClient --no-build -- QUAY01"
+
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd 'C:\Users\RinHeo\Desktop\PRN222-FCanteen\FCanteen'; dotnet run --project FCanteen.PosClient --no-build -- QUAY02"
+
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd 'C:\Users\RinHeo\Desktop\PRN222-FCanteen\FCanteen'; dotnet run --project FCanteen.PosClient --no-build -- QUAY03"
+
 ```
 
 ---
