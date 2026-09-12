@@ -1,139 +1,114 @@
-﻿# Cau hoi Ly Thuyet — Lab 01
+# Câu hỏi Lý Thuyết — Lab 01
 
-**Mon hoc**: PRN222 — Networking Programming  
-**Ho ten**: Chau Vuong Hoang | **Ma SV**: DE180551
+**Môn học**: PRN222 — Networking Programming
+**Họ tên**: Châu Vương Hoàng | **Mã SV**: DE180551
 
 ---
 
-## Cau 1: Tai sao gui phieu order phai dung TCP, thong bao het mon co the dung UDP?
+## Câu 1: Tại sao gửi phiếu order phải dùng TCP, thông báo hết món có thể dùng UDP?
 
-### Tra loi
+### Trả lời
 
-#### TCP — Dung cho gui phieu order (OrderTicket)
+#### TCP — Dùng cho gửi phiếu order
 
-TCP (Transmission Control Protocol) dam bao **truyen du lieu tin cay** nho co che:
-- **Ket noi 3 buoc** (3-way handshake): client va server bac tay truoc khi truyen
-- **Xac nhan tung goi tin** (ACK): neu mat goi → tu dong gui lai
-- **Dam bao thu tu**: du lieu den dung thu tu da gui
-- **Kiem tra loi**: phat hien va xu ly truong hop mat du lieu
+TCP (Transmission Control Protocol) đảm bảo **truyền dữ liệu tin cậy** nhờ cơ chế:
+- **Kết nối 3 bước** (3-way handshake): client và server bắt tay trước khi truyền
+- **Xác nhận từng gói tin** (ACK): nếu mất gói → tự động gửi lại
+- **Đảm bảo thứ tự**: dữ liệu đến đúng thứ tự đã gửi
 
-**Vi sao phieu order PHAI dung TCP?**
+**Tại sao phiếu order PHẢI dùng TCP?**
 
-| Tinh huong | Hau qua neu dung UDP |
+| Tình huống | Hậu quả nếu dùng UDP |
 |-----------|---------------------|
-| Goi tin bi mat tren mang | Phieu order bi mat → khach hang khong nhan duoc mon |
-| Du lieu den sai thu tu | Server xu ly sai phieu → tinh tien sai |
-| Khong co xac nhan | Quay khong biet phieu da den bep hay chua |
-| Ket noi bi ngat giua chung | Phieu order luu mot nua vao DB → du lieu hong |
+| Gói tin bị mất | Phiếu order mất → khách hàng không nhận được món |
+| Dữ liệu sai thứ tự | Server tính tiền sai |
+| Không có xác nhận | Quầy không biết phiếu đã đến bếp hay chưa |
+| Kết nối đứt giữa chừng | Lưu một nửa vào DB → dữ liệu hỏng |
 
-**Ket luan**: Phieu order chua thong tin tai chinh (tong tien, so luong) → sai sot gay thiet hai truc tiep → **bat buoc phai dung TCP**.
+**Kết luận**: Phiếu order chứa thông tin tài chính → sai sót gây thiệt hại trực tiếp → **bắt buộc dùng TCP**.
 
 ---
 
-#### UDP — Dung cho thong bao het mon
+#### UDP — Dùng cho thông báo hết món
 
-UDP (User Datagram Protocol) gui du lieu **nhanh, khong ket noi**, khong dam bao den noi:
-- Khong co 3-way handshake → gui ngay lap tuc
-- Khong xac nhan → khong biet client co nhan duoc khong
-- Ho tro **Broadcast**: 1 goi tin phat toi toan mang cung luc
-
-**Vi sao thong bao het mon CO THE dung UDP?**
-
-| Ly do | Giai thich |
+| Lý do | Giải thích |
 |-------|-----------|
-| **Hau qua khong nghiem trong** | Neu PosClient khong nhan duoc → lan sau load menu tu DB van biet mon het hang |
-| **Toc do quan trong** | Thong bao can phat nhanh toi tat ca quay dong thoi |
-| **Broadcast hieu qua** | 1 goi UDP phat toi 10 quay cung luc, TCP phai ket noi 10 lan rieng |
-| **Du lieu nho, don gian** | Chi can: "MonID:TenMon het hang" — khong can toan ven phuc tap |
-| **Co co che du phong** | PosClient reload menu tu DB khi can → tu dong cap nhat trang thai |
+| Hậu quả không nghiêm trọng | Nếu PosClient không nhận được → load lại menu từ DB vẫn biết |
+| Tốc độ quan trọng | Phát nhanh tới tất cả quầy đồng thời |
+| Broadcast hiệu quả | 1 gói UDP → 10 quầy cùng lúc; TCP phải kết nối 10 lần riêng |
+| Dữ liệu nhỏ, đơn giản | Chỉ cần: ID:Tên hết hàng — không cần phức tạp |
 
-**Ket luan**: Thong bao het mon chi co tinh chat "thong tin nhanh" → mat mot goi cung khong gay sai so nghiem trong → UDP phu hop vi nhanh va ho tro Broadcast.
+**Kết luận**: Thông báo hết món chỉ là thông tin nhanh → mất một gói không gây sai sót → UDP phù hợp vì nhanh và hỗ trợ Broadcast.
 
 ---
 
-### So sanh tong quat
+### So sánh tổng quát
 
-| Tieu chi | TCP | UDP |
+| Tiêu chí | TCP | UDP |
 |---------|-----|-----|
-| Do tin cay | ✅ Cao (co ACK, gui lai) | ❌ Khong dam bao |
-| Toc do | Cham hon | ✅ Nhanh hon |
-| Ket noi | Phai ket noi truoc | Khong can |
-| Broadcast | ❌ Khong ho tro | ✅ Ho tro |
-| Dung cho | Phieu order, giao dich | Thong bao, stream video, game |
+| Độ tin cậy | ✅ Cao (ACK, gửi lại) | ❌ Không đảm bảo |
+| Tốc độ | Chậm hơn | ✅ Nhanh hơn |
+| Broadcast | ❌ Không hỗ trợ | ✅ Hỗ trợ |
+| Dùng cho | Phiếu order, giao dịch | Thông báo, stream, game |
 
 ---
 
-## Cau 2: May chu tu tinh tong tien thay vi tin client — tinh huong tan cong cu the?
+## Câu 2: Máy chủ tự tính tổng tiền thay vì tin client — tình huống tấn công cụ thể?
 
-### Tra loi
+### Trả lời
 
-He thong FCanteen **khong tin tong tien tu PosClient** — server luon tu doc gia tu DB va tinh lai.
-
-**Vi sao?** Vi client co the bi gia mao (tampered) hoac lap trinh lai.
+Hệ thống FCanteen **không tin tổng tiền từ PosClient** — server luôn tự đọc giá từ DB và tính lại.
 
 ---
 
-### Tinh huong tan cong cu the
+### Tình huống tấn công cụ thể
 
-#### Tan cong 1: Man-in-the-Middle (MITM) — Sua goi tin tren duong truyen
+#### Tấn công 1: Man-in-the-Middle (MITM) — Sửa gói tin trên đường truyền
 
-```
-PosClient                  Ke tan cong                  KitchenServer
-    |  {"TotalAmount":70000}  |                               |
-    |─────────────────────────► sua thanh 7000 ──────────────► |
-    |                          (giam 10 lan!)                  |
-```
+`
+PosClient ──── {TotalAmount: 70000} ────► [Kẻ tấn công sửa → 7000] ────► KitchenServer
+`
 
-**Kich ban**: Ke tan cong chen vao giua mang, bat goi TCP va sua `TotalAmount` tu 70,000 xuong 7,000 truoc khi gui den server.
+**Kịch bản**: Kẻ tấn công chèn vào giữa mạng, bắt gói TCP và sửa TotalAmount từ 70.000 xuống 7.000.
 
-**Neu server tin client**: Luu phieu voi tong tien 7,000 → mat tien  
-**He thong FCanteen**: Server tu lay gia tu DB × so luong → tinh ra 70,000 → phieu dung
+- ❌ Nếu server tin client: Lưu phiếu 7.000 VND → mất tiền
+- ✅ FCanteen: Server tự lấy giá từ DB × số lượng → luôn ra 70.000
 
 ---
 
-#### Tan cong 2: Gian lan tu nguoi dung (Client Tampering)
+#### Tấn công 2: Gian lận Client (Client Tampering)
 
-```csharp
-// Ke gian lan sua code PosClient:
-var order = new OrderDto {
-    StationName = "QUAY01",
-    Lines = new() {
-        new OrderLineDto { MenuItemId = 1, Quantity = 10, UnitPrice = 1 } // gia 1 VND!
-    },
-    TotalAmount = 10 // tu tinh sai
-};
-```
+`csharp
+// Nhân viên sửa code PosClient:
+new OrderLineDto { MenuItemId = 1, Quantity = 10, UnitPrice = 1 } // giá 1đ thay vì 35.000đ
+`
 
-**Kich ban**: Nhan vien sua code PosClient, tu dat `UnitPrice = 1` de mua 10 mon chi ton 10 VND.
+**Kịch bản**: Nhân viên sửa code PosClient để đặt giá = 1 VND cho mọi món.
 
-**Neu server tin client**: Luu phieu 10 VND → thiet hai  
-**He thong FCanteen**: Server doc `menuItem.Price = 35000` tu DB → tinh `35000 × 10 = 350,000` → dung
+- ❌ Nếu server tin client: Lưu phiếu 10 VND (10 món × 1đ) → thiệt hại
+- ✅ FCanteen: Server đọc Price = 35.000 từ DB → tính 35.000 × 10 = 350.000
 
 ---
 
-#### Tan cong 3: Replay Attack — Gui lai phieu cu
+#### Tấn công 3: Replay Attack — Gửi lại phiếu cũ
 
-**Kich ban**: Chup lai goi tin TCP cua 1 phieu thanh toan thanh cong, gui lai nhieu lan voi tong tien thap.
+**Kịch bản**: Chụp lại gói TCP của phiếu cũ (giá thấp hơn), gửi lại nhiều lần.
 
-**Neu server tin client**: Chap nhan nhieu phieu trung lap voi gia cu  
-**He thong FCanteen**: Moi phieu server tu tinh lai tu DB → gia luon la gia hien tai, khong the dung gia cu
-
----
-
-### Nguyen tac bao mat: "Never Trust the Client"
-
-> **"Khong bao gio tin du lieu tu phia client doi voi cac thong tin co gia tri kinh te."**
-
-He thong FCanteen ap dung:
-- Client chi gui: `MenuItemId` + `Quantity` + `Note` (khong co gia)  
-- Server tu lay: `Price` tu database (nguon duy nhat dang tin cay)
-- Server tu tinh: `TotalAmount = SUM(Price × Quantity)` — khong chap nhan so client gui
-
-**Ngoai ra nen bo sung** (de hoan thien bao mat):
-- Xac thuc JWT token cho moi ket noi TCP
-- Ghi log moi phieu voi thong tin quay + IP nguon
-- Canh bao neu so luong trong 1 phieu bat thuong (> 50 mon/loai)
+- ❌ Nếu server tin client: Chấp nhận phiếu với giá cũ
+- ✅ FCanteen: Server luôn tự tính từ giá hiện tại trong DB → không dùng giá cũ được
 
 ---
 
-*Tra loi duoc trich xuat tu thiet ke thuc te cua he thong FCanteen - Lab 01 PRN222*
+### Nguyên tắc bảo mật: Never Trust the Client
+
+> **Không bao giờ tin dữ liệu từ client đối với thông tin có giá trị kinh tế.**
+
+| Vai trò | Thông tin |
+|--------|----------|
+| Client chỉ gửi | MenuItemId + Quantity + Note *(không có giá)* |
+| Server tự lấy | Price từ database *(nguồn duy nhất đáng tin)* |
+| Server tự tính | TotalAmount = SUM(Price × Quantity) |
+
+---
+
+*Trả lời được trích xuất từ thiết kế thực tế của hệ thống FCanteen — Lab 01 PRN222*
