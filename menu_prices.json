@@ -1,0 +1,17 @@
+﻿[
+  {"MenuItemId": 1, "Name": "Com ga",           "Price": 38000},
+  {"MenuItemId": 2, "Name": "Com suon",          "Price": 37000},
+  {"MenuItemId": 3, "Name": "Com tam",           "Price": 32000},
+  {"MenuItemId": 4, "Name": "Bun bo",            "Price": 42000},
+  {"MenuItemId": 5, "Name": "Pho bo",            "Price": 48000},
+  {"MenuItemId": 6, "Name": "Mi quang",          "Price": 37000},
+  {"MenuItemId": 7, "Name": "Banh mi thit",      "Price": 22000},
+  {"MenuItemId": 8, "Name": "Xoi ga",            "Price": 27000},
+  {"MenuItemId": 9, "Name": "Che dau xanh",      "Price": 16000},
+  {"MenuItemId": 10, "Name": "Tra sua tran chau","Price": 32000},
+  {"MenuItemId": 11, "Name": "Nuoc cam ep",      "Price": 22000},
+  {"MenuItemId": 12, "Name": "Sinh to bo",       "Price": 27000},
+  {"MenuItemId": 13, "Name": "Banh bao nhan thit","Price": 16000},
+  {"MenuItemId": 14, "Name": "Hu tieu nam vang", "Price": 42000},
+  {"MenuItemId": 15, "Name": "Chao ga",          "Price": 32000}
+]
