@@ -480,3 +480,6 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+# Ly thuyet files (khong push len git repo, nop trong bao cao)
+LY_THUYET*.md
