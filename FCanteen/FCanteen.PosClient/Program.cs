@@ -25,9 +25,8 @@ var dbOptions = new DbContextOptionsBuilder<FCanteenContext>()
     .UseSqlServer(connectionString)
     .Options;
 
-// ============================================================
 // YC4-A: LANG NGHE UDP BROADCAST HET HANG (chay ngam)
-// ============================================================
+
 var soldOutIds = new HashSet<int>();
 
 _ = Task.Run(async () =>
@@ -58,9 +57,9 @@ _ = Task.Run(async () =>
     catch { }
 });
 
-// ============================================================
+
 // YC4-B: DONG BO BANG GIA HTTPCLIENT + URI + DNS
-// ============================================================
+
 async Task SyncPricesAsync()
 {
     Console.ForegroundColor = ConsoleColor.Yellow;
@@ -143,9 +142,9 @@ async Task SyncPricesAsync()
     }
 }
 
-// ============================================================
+
 // HIEN THI MENU
-// ============================================================
+
 async Task<List<FCanteen.Data.Entities.MenuItem>> ShowMenuAsync()
 {
     using var db = new FCanteenContext(dbOptions);
@@ -173,17 +172,16 @@ async Task<List<FCanteen.Data.Entities.MenuItem>> ShowMenuAsync()
     return all;
 }
 
-// ============================================================
+
 // KHOI DONG: SYNC GIA TRUOC
-// ============================================================
+
 Console.WriteLine($"[{stationName}] Khoi dong - dong bo bang gia...");
 await SyncPricesAsync();
 Console.Write("Nhan phim de tiep tuc... ");
 Console.ReadKey();
 
-// ============================================================
 // VONG LAP CHINH
-// ============================================================
+
 bool running = true;
 while (running)
 {
