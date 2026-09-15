@@ -228,6 +228,7 @@ Console.WriteLine("  seed                  - Sinh 50.000 OrderTickets & 200.000 
 Console.WriteLine("  yc2                   - Benchmark Tuan tu vs Song song (YC2)");
 Console.WriteLine("  yc3                   - 4 Bao cao thong ke bang PLINQ (YC3)");
 Console.WriteLine("  yc4                   - Bat dong bo EF Core Task.WhenAll & IAsyncEnumerable (YC4)");
+Console.WriteLine("  yc5                   - Demo Race Condition tru nguyen lieu Unsafe vs Safe (YC5)");
 Console.WriteLine("  exit                  - Thoat\n");
 
 while (true)
@@ -270,6 +271,14 @@ while (true)
     {
         var svc = new EfAsyncReportService(() => new FCanteenContext(BuildDbOptions()));
         await svc.RunAsyncReportsAsync();
+        continue;
+    }
+
+    if (cmd == "yc5")
+    {
+        using var db = new FCanteenContext(BuildDbOptions());
+        var svc = new InventoryRaceConditionService(db);
+        await svc.RunSimulationAsync();
         continue;
     }
 
