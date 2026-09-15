@@ -8,9 +8,9 @@ using FCanteen.KitchenServer.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-// ============================================================
+
 // CAU HINH
-// ============================================================
+
 var config = new ConfigurationBuilder()
     .SetBasePath(AppContext.BaseDirectory)
     .AddJsonFile("appsettings.json", optional: false)
@@ -23,15 +23,14 @@ DbContextOptions<FCanteenContext> BuildDbOptions() =>
         .UseSqlServer(connectionString)
         .Options;
 
-// ============================================================
-// HANG SO
-// ============================================================
+
+
 const int TCP_PORT = 9500;
 const int UDP_PORT = 9501;
 
-// ============================================================
+
 // DANH SACH PHIEU DANG CHO
-// ============================================================
+
 var pendingTickets = new List<string>();
 var lockObj = new object();
 
@@ -55,9 +54,9 @@ void PrintPending()
     }
 }
 
-// ============================================================
+
 // YC4-A: PHAT UDP BROADCAST KHI MON HET HANG
-// ============================================================
+
 async Task BroadcastSoldOutAsync(int menuItemId, string itemName)
 {
     using var udpClient = new UdpClient();
@@ -83,10 +82,7 @@ async Task BroadcastSoldOutAsync(int menuItemId, string itemName)
     });
     await db.SaveChangesAsync();
 }
-
-// ============================================================
-// XU LY MOI KET NOI QUAY (chay tren Task rieng)
-// ============================================================
+// xử lý kết nối quầy 
 async Task HandleClientAsync(TcpClient client)
 {
     var endpoint = client.Client.RemoteEndPoint?.ToString() ?? "unknown";
@@ -124,7 +120,7 @@ async Task HandleClientAsync(TcpClient client)
             return;
         }
 
-        // ---- LUU VAO DB TRONG TRANSACTION ----
+        // lưu vào database trong transaction
         await using var transaction = await db.Database.BeginTransactionAsync();
         try
         {
@@ -207,9 +203,6 @@ async Task HandleClientAsync(TcpClient client)
     }
 }
 
-// ============================================================
-// KHOI DONG SERVER
-// ============================================================
 var listener = new TcpListener(IPAddress.Any, TCP_PORT);
 listener.Start();
 Console.ForegroundColor = ConsoleColor.Yellow;
@@ -227,9 +220,6 @@ _ = Task.Run(async () =>
     }
 });
 
-// ============================================================
-// GIAO DIEN CONSOLE: lenh 'soldout <ID>'
-// ============================================================
 Console.WriteLine("\n[GO LENH] Danh sach lenh:");
 Console.WriteLine("  soldout <MenuItemId>  - Danh dau mon het hang va broadcast UDP");
 Console.WriteLine("  list                  - Xem danh sach phieu dang cho");
