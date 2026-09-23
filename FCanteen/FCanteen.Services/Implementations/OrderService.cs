@@ -70,33 +70,39 @@ namespace FCanteen.Services.Implementations
                 TicketLines = ticketLines
             };
 
-            // YC2: Ap dung danh sach cac chinh sach giam gia theo Open/Closed (OCP)
+            // YC2: Tinh toan giam gia theo Open/Closed (OCP)
             decimal totalDiscount = 0;
+            var discountLogs = new List<(string PolicyName, decimal Amount, string Reason)>();
+
             foreach (var policy in _discountPolicies)
             {
                 decimal discount = policy.CalculateDiscount(ticket, currentStaff, out string reason);
                 if (discount > 0)
                 {
                     totalDiscount += discount;
+                    discountLogs.Add((policy.PolicyName, discount, reason));
                     AuditLogger?.LogAction("DISCOUNT_APPLIED", $"Chinh sach: {policy.PolicyName} - Giam: {discount:N0} VND ({reason})");
-
-                    // Ghi log giam gia xuong Database theo de bai
-                    await _orderRepo.AddDiscountLogAsync(new DiscountPolicyLog
-                    {
-                        OrderTicketId = ticket.OrderTicketId,
-                        PolicyName = policy.PolicyName,
-                        DiscountAmount = discount,
-                        AppliedAt = DateTime.Now,
-                        Reason = reason
-                    });
                 }
             }
 
             // Cap nhat tong tien sau giam gia
             ticket.TotalAmount = Math.Max(0, rawTotal - totalDiscount);
 
-            // Luu order vao CSDL
+            // Luu ticket vao CSDL truoc de co OrderTicketId thuc su
             await _orderRepo.CreateOrderAsync(ticket);
+
+            // Luu cac log giam gia voi dung OrderTicketId vua sinh
+            foreach (var log in discountLogs)
+            {
+                await _orderRepo.AddDiscountLogAsync(new DiscountPolicyLog
+                {
+                    OrderTicketId = ticket.OrderTicketId,
+                    PolicyName = log.PolicyName,
+                    DiscountAmount = log.Amount,
+                    AppliedAt = DateTime.Now,
+                    Reason = log.Reason
+                });
+            }
 
             // YC3: Gui thong bao qua kenh INotificationService duoc inject
             await _notificationService.SendNotificationAsync(
