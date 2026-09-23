@@ -1,4 +1,4 @@
-﻿﻿﻿﻿using System.Net;
+﻿﻿﻿﻿﻿﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -230,14 +230,14 @@ async Task<List<FCanteen.Data.Entities.MenuItem>> ShowMenuAsync()
 Console.WriteLine($"[{stationName}] Khoi dong - dong bo bang gia...");
 await SyncPricesAsync();
 Console.Write("Nhan phim de tiep tuc... ");
-Console.ReadKey();
+if (!Console.IsInputRedirected) Console.ReadKey(); else Console.ReadLine();
 
 // VONG LAP CHINH
 
 bool running = true;
 while (running)
 {
-    Console.Clear();
+    if (!Console.IsOutputRedirected) Console.Clear();
     Console.ForegroundColor = ConsoleColor.Magenta;
     Console.WriteLine($"  === FCANTEEN | {stationName} ===  [sync=dong bo gia | thoat=thoat]");
     Console.ResetColor();
@@ -255,7 +255,7 @@ while (running)
 
         if (input == "thoat") { running = false; orderDone = true; break; }
         if (input == "xong") { orderDone = true; break; }
-        if (input == "sync") { await SyncPricesAsync(); Console.ReadKey(); break; }
+        if (input == "sync") { await SyncPricesAsync(); if (!Console.IsInputRedirected) Console.ReadKey(); else Console.ReadLine(); break; }
 
         if (!int.TryParse(input, out int idx) || idx < 1 || idx > allItems.Count)
         {
@@ -334,7 +334,7 @@ while (running)
     }
 
     Console.Write("  Nhan phim de tiep tuc... ");
-    Console.ReadKey();
+    if (!Console.IsInputRedirected) Console.ReadKey(); else Console.ReadLine();
 }
 
 Console.WriteLine("Tam biet!");

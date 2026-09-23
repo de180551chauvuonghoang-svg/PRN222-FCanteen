@@ -1,4 +1,4 @@
-namespace FCanteen.Web.Models;
+﻿namespace FCanteen.Web.Models;
 
 public class ErrorViewModel
 {
