@@ -16,6 +16,12 @@ namespace FCanteen.Data
         public DbSet<Staff> Staffs => Set<Staff>();
         public DbSet<DiscountPolicyLog> DiscountPolicyLogs => Set<DiscountPolicyLog>();
 
+        protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+        {
+            // Cau hinh toan bo thuoc tinh decimal ve chuan decimal(18, 2)
+            configurationBuilder.Properties<decimal>().HavePrecision(18, 2);
+        }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Seed 15 mon an bang HasData
