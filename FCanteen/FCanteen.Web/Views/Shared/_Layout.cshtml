@@ -1,0 +1,100 @@
+﻿@using FCanteen.Web.Helpers
+@using FCanteen.Web.ViewModels
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FCanteen Quáº£n Trá»‹</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="bg-light">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm mb-4">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand fw-bold fs-4" asp-controller="MenuItems" asp-action="Index">
+                    <i class="bi bi-cup-hot-fill me-2 text-warning"></i>FCanteen Admin
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active fw-semibold" asp-controller="MenuItems" asp-action="Index">
+                                <i class="bi bi-card-list me-1"></i>Thá»±c Ä‘Æ¡n mÃ³n Äƒn
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold" asp-controller="IngredientCart" asp-action="IngredientsList">
+                                <i class="bi bi-box-seam me-1"></i>Kho nguyÃªn liá»‡u
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link fw-semibold text-warning" asp-controller="MenuItems" asp-action="GetAvailableMenuItems" target="_blank">
+                                <i class="bi bi-code-slash me-1"></i>JSON Endpoint (POS API)
+                            </a>
+                        </li>
+                    </ul>
+
+                    @{
+                        var cart = Context.Session.GetJson<List<CartItemViewModel>>("IngredientCart");
+                        int cartCount = cart != null ? cart.Count : 0;
+                    }
+
+                    <div class="d-flex align-items-center">
+                        <a asp-controller="IngredientCart" asp-action="Index" class="btn btn-warning position-relative fw-bold text-dark me-3 shadow-sm">
+                            <i class="bi bi-cart3 me-1"></i>Giá» nháº­p hÃ ng
+                            @if (cartCount > 0)
+                            {
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger border border-light">
+                                    @cartCount
+                                </span>
+                            }
+                        </a>
+                        <span class="navbar-text text-white">
+                            <i class="bi bi-person-circle me-1"></i>Quáº£n lÃ½ cÄƒng tin
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid px-4">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+                <strong>ThÃ nh cÃ´ng!</strong> @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+                <strong>ThÃ´ng bÃ¡o:</strong> @TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted py-3 bg-white mt-auto">
+        <div class="container-fluid px-4 text-center">
+            &copy; 2026 - FCanteen Quáº£n lÃ½ cÄƒng tin FPT University ÄÃ  Náºµng â€” PRN222 Lab 04
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

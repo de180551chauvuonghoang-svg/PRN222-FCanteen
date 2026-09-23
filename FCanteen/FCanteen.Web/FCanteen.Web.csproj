@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <ProjectReference Include="..\FCanteen.Data\FCanteen.Data.csproj" />
+    <ProjectReference Include="..\FCanteen.Repositories\FCanteen.Repositories.csproj" />
+    <ProjectReference Include="..\FCanteen.Services\FCanteen.Services.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

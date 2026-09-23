@@ -1,0 +1,28 @@
+﻿@model FCanteen.Data.Entities.MenuItem
+@{
+    ViewData["Title"] = "XÃ¡c nháº­n xÃ³a mÃ³n";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 border-danger">
+            <div class="card-header bg-danger text-white py-3">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle me-2"></i>XÃ¡c nháº­n xÃ³a mÃ³n Äƒn</h4>
+            </div>
+            <div class="card-body p-4 text-center">
+                <p class="fs-5 text-muted mb-2">Báº¡n cÃ³ cháº¯c cháº¯n muá»‘n xÃ³a mÃ³n nÃ y khá»i thá»±c Ä‘Æ¡n khÃ´ng?</p>
+                <h3 class="text-danger fw-bold mb-3">@Model.Name (@Model.ItemCode)</h3>
+                <p class="text-muted">GiÃ¡ bÃ¡n: <strong>@Model.Price.ToString("N0") VND</strong> | ÄÆ¡n vá»‹: <strong>@Model.Unit</strong></p>
+
+                <form asp-action="Delete" method="post" class="mt-4">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="MenuItemId" />
+                    <div class="d-flex justify-content-center gap-3">
+                        <a asp-action="Index" class="btn btn-secondary px-4">Há»§y bá»</a>
+                        <button type="submit" class="btn btn-danger fw-bold px-4">XÃ¡c nháº­n xÃ³a</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

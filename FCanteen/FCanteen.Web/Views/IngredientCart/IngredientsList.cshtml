@@ -1,0 +1,62 @@
+﻿@model IEnumerable<FCanteen.Data.Entities.Ingredient>
+@{
+    ViewData["Title"] = "Kho nguyÃªn liá»‡u & Äáº·t hÃ ng";
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2 class="card-title text-primary fw-bold mb-1">
+                    <i class="bi bi-box-seam me-2"></i>Kho nguyÃªn liá»‡u & Nháº­p hÃ ng nhÃ  cung cáº¥p
+                </h2>
+                <p class="text-muted mb-0">Chá»n cÃ¡c nguyÃªn liá»‡u cáº§n nháº­p thÃªm Ä‘á»ƒ thÃªm vÃ o giá» hÃ ng (Quáº£n lÃ½ qua Session).</p>
+            </div>
+            <a asp-action="Index" class="btn btn-warning fw-bold shadow-sm">
+                <i class="bi bi-cart3 me-1"></i>Xem giá» nháº­p hÃ ng
+            </a>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>TÃªn nguyÃªn liá»‡u</th>
+                        <th>NhÃ  cung cáº¥p</th>
+                        <th class="text-center" style="width: 120px;">ÄÆ¡n vá»‹</th>
+                        <th class="text-end" style="width: 140px;">Tá»“n kho</th>
+                        <th class="text-end" style="width: 140px;">ÄÆ¡n giÃ¡ nháº­p</th>
+                        <th style="width: 250px;" class="text-center">ThÃªm vÃ o giá»</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="fw-bold">@item.Name</td>
+                            <td><span class="badge bg-secondary">@(item.Supplier?.Name ?? "NPP ChÃ­nh")</span></td>
+                            <td class="text-center">@item.Unit</td>
+                            <td class="text-end fw-semibold @(item.StockQuantity <= item.WarningThreshold ? "text-danger" : "text-dark")">
+                                @item.StockQuantity @item.Unit
+                                @if (item.StockQuantity <= item.WarningThreshold)
+                                {
+                                    <span class="badge bg-danger d-block mt-1">Sáº¯p háº¿t!</span>
+                                }
+                            </td>
+                            <td class="text-end text-success fw-bold">@item.CostPrice.ToString("N0") Ä‘</td>
+                            <td class="text-center">
+                                <form asp-action="AddToCart" method="post" class="d-flex gap-2 justify-content-center">
+                                    <input type="hidden" name="ingredientId" value="@item.IngredientId" />
+                                    <input type="number" name="quantity" value="10" min="1" step="1" class="form-control form-control-sm text-end" style="width: 90px;" />
+                                    <button type="submit" class="btn btn-sm btn-primary fw-semibold">
+                                        <i class="bi bi-cart-plus me-1"></i>ThÃªm
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

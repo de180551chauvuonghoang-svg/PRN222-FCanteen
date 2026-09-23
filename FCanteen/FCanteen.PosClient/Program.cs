@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿﻿﻿﻿﻿﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -15,6 +15,7 @@ var config = new ConfigurationBuilder()
 var connectionString = config.GetConnectionString("FCanteenDb")!;
 var kitchenHost = config["KitchenServer:Host"] ?? "127.0.0.1";
 var kitchenPort = int.Parse(config["KitchenServer:Port"] ?? "9500");
+var menuApiUrl = config["MenuApiUrl"] ?? "http://localhost:5018/MenuItems/GetAvailableMenuItems";
 var stationName = args.Length > 0 ? args[0] : "QUAY01";
 
 const int UDP_PORT = 9501;
@@ -145,10 +146,61 @@ async Task SyncPricesAsync()
 
 // HIEN THI MENU
 
+// LAB 04 - YC5: PosClient goi API /MenuItems/GetAvailableMenuItems thay vi goi truc tiep DB Context
 async Task<List<FCanteen.Data.Entities.MenuItem>> ShowMenuAsync()
 {
-    using var db = new FCanteenContext(dbOptions);
-    var all = await db.MenuItems.OrderBy(m => m.MenuItemId).ToListAsync();
+    List<FCanteen.Data.Entities.MenuItem> all = new();
+    try
+    {
+        using var http = new HttpClient();
+        http.Timeout = TimeSpan.FromSeconds(2);
+        var resp = await http.GetAsync(menuApiUrl);
+        if (resp.IsSuccessStatusCode)
+        {
+            var json = await resp.Content.ReadAsStringAsync();
+            List<MenuItemApiDto>? apiItems = null;
+            using var doc = JsonDocument.Parse(json);
+            if (doc.RootElement.ValueKind == JsonValueKind.Array)
+            {
+                apiItems = JsonSerializer.Deserialize<List<MenuItemApiDto>>(json,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            else if (doc.RootElement.TryGetProperty("items", out var itemsElem) || doc.RootElement.TryGetProperty("Items", out itemsElem))
+            {
+                apiItems = JsonSerializer.Deserialize<List<MenuItemApiDto>>(itemsElem.GetRawText(),
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            }
+            if (apiItems != null && apiItems.Count > 0)
+            {
+                all = apiItems.Select(a => new FCanteen.Data.Entities.MenuItem
+                {
+                    MenuItemId = a.MenuItemId,
+                    ItemCode = a.ItemCode,
+                    Name = a.Name,
+                    Price = a.Price,
+                    
+                    IsAvailable = a.IsAvailable
+                }).OrderBy(m => m.MenuItemId).ToList();
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine($"  [API HTTP] Dong bo menu tu Web API thanh cong: {menuApiUrl} ({all.Count} mon)");
+                Console.ResetColor();
+            }
+        }
+    }
+    catch
+    {
+        // Fallback DB neu Web API chua khoi chay
+    }
+
+    if (all.Count == 0)
+    {
+        using var db = new FCanteenContext(dbOptions);
+        all = await db.MenuItems.OrderBy(m => m.MenuItemId).ToListAsync();
+        Console.ForegroundColor = ConsoleColor.DarkYellow;
+        Console.WriteLine("  [DB LOCAL] Web API chua bat, fallback tai menu truc tiep tu Database.");
+        Console.ResetColor();
+    }
 
     Console.ForegroundColor = ConsoleColor.Cyan;
     Console.WriteLine($"\n  {"STT",-5} {"Ten mon",-25} {"Don gia",-12} {"Trang thai"}");
@@ -178,14 +230,14 @@ async Task<List<FCanteen.Data.Entities.MenuItem>> ShowMenuAsync()
 Console.WriteLine($"[{stationName}] Khoi dong - dong bo bang gia...");
 await SyncPricesAsync();
 Console.Write("Nhan phim de tiep tuc... ");
-Console.ReadKey();
+if (!Console.IsInputRedirected) Console.ReadKey(); else Console.ReadLine();
 
 // VONG LAP CHINH
 
 bool running = true;
 while (running)
 {
-    Console.Clear();
+    if (!Console.IsOutputRedirected) Console.Clear();
     Console.ForegroundColor = ConsoleColor.Magenta;
     Console.WriteLine($"  === FCANTEEN | {stationName} ===  [sync=dong bo gia | thoat=thoat]");
     Console.ResetColor();
@@ -203,7 +255,7 @@ while (running)
 
         if (input == "thoat") { running = false; orderDone = true; break; }
         if (input == "xong") { orderDone = true; break; }
-        if (input == "sync") { await SyncPricesAsync(); Console.ReadKey(); break; }
+        if (input == "sync") { await SyncPricesAsync(); if (!Console.IsInputRedirected) Console.ReadKey(); else Console.ReadLine(); break; }
 
         if (!int.TryParse(input, out int idx) || idx < 1 || idx > allItems.Count)
         {
@@ -282,7 +334,7 @@ while (running)
     }
 
     Console.Write("  Nhan phim de tiep tuc... ");
-    Console.ReadKey();
+    if (!Console.IsInputRedirected) Console.ReadKey(); else Console.ReadLine();
 }
 
 Console.WriteLine("Tam biet!");
@@ -292,4 +344,15 @@ public class PriceItem
     public int MenuItemId { get; set; }
     public string Name { get; set; } = "";
     public decimal Price { get; set; }
+}
+
+public class MenuItemApiDto
+{
+    public int MenuItemId { get; set; }
+    public string ItemCode { get; set; } = "";
+    public string Name { get; set; } = "";
+    public decimal Price { get; set; }
+    public decimal CostPrice { get; set; }
+    public string CategoryName { get; set; } = "";
+    public bool IsAvailable { get; set; }
 }
