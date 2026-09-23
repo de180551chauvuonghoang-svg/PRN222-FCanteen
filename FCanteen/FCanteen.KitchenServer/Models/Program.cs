@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using FCanteen.Data.Services;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -223,6 +224,11 @@ _ = Task.Run(async () =>
 Console.WriteLine("\n[GO LENH] Danh sach lenh:");
 Console.WriteLine("  soldout <MenuItemId>  - Danh dau mon het hang va broadcast UDP");
 Console.WriteLine("  list                  - Xem danh sach phieu dang cho");
+Console.WriteLine("  seed                  - Sinh 50.000 OrderTickets & 200.000 Lines (YC1)");
+Console.WriteLine("  yc2                   - Benchmark Tuan tu vs Song song (YC2)");
+Console.WriteLine("  yc3                   - 4 Bao cao thong ke bang PLINQ (YC3)");
+Console.WriteLine("  yc4                   - Bat dong bo EF Core Task.WhenAll & IAsyncEnumerable (YC4)");
+Console.WriteLine("  yc5                   - Demo Race Condition tru nguyen lieu Unsafe vs Safe (YC5)");
 Console.WriteLine("  exit                  - Thoat\n");
 
 while (true)
@@ -235,6 +241,44 @@ while (true)
     if (cmd == "list")
     {
         PrintPending();
+        continue;
+    }
+
+    if (cmd == "seed")
+    {
+        using var db = new FCanteenContext(BuildDbOptions());
+        await DataSeeder.SeedLargeDataAsync(db);
+        continue;
+    }
+
+    if (cmd == "yc2")
+    {
+        using var db = new FCanteenContext(BuildDbOptions());
+        var svc = new ItemEfficiencyService(db);
+        await svc.RunBenchmarkAsync();
+        continue;
+    }
+
+    if (cmd == "yc3")
+    {
+        using var db = new FCanteenContext(BuildDbOptions());
+        var svc = new PlinqReportService(db);
+        await svc.RunReportsAsync();
+        continue;
+    }
+
+    if (cmd == "yc4")
+    {
+        var svc = new EfAsyncReportService(() => new FCanteenContext(BuildDbOptions()));
+        await svc.RunAsyncReportsAsync();
+        continue;
+    }
+
+    if (cmd == "yc5")
+    {
+        using var db = new FCanteenContext(BuildDbOptions());
+        var svc = new InventoryRaceConditionService(db);
+        await svc.RunSimulationAsync();
         continue;
     }
 

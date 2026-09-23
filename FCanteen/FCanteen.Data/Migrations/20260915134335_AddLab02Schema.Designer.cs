@@ -4,6 +4,7 @@ using FCanteen.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FCanteen.Data.Migrations
 {
     [DbContext(typeof(FCanteenContext))]
-    partial class FCanteenContextModelSnapshot : ModelSnapshot
+    [Migration("20260915134335_AddLab02Schema")]
+    partial class AddLab02Schema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -77,36 +80,6 @@ namespace FCanteen.Data.Migrations
                     b.HasKey("DeviceLogId");
 
                     b.ToTable("DeviceLogs");
-                });
-
-            modelBuilder.Entity("FCanteen.Data.Entities.DiscountPolicyLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("AppliedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("DiscountAmount")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("OrderTicketId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PolicyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Reason")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("DiscountPolicyLogs");
                 });
 
             modelBuilder.Entity("FCanteen.Data.Entities.Ingredient", b =>
@@ -380,61 +353,6 @@ namespace FCanteen.Data.Migrations
                     b.HasKey("OrderTicketId");
 
                     b.ToTable("OrderTickets");
-                });
-
-            modelBuilder.Entity("FCanteen.Data.Entities.Staff", b =>
-                {
-                    b.Property<int>("StaffId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StaffId"));
-
-                    b.Property<string>("BranchCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Role")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("StaffCode")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("StaffId");
-
-                    b.ToTable("Staffs");
-
-                    b.HasData(
-                        new
-                        {
-                            StaffId = 1,
-                            BranchCode = "CS1",
-                            FullName = "Nguyen Van An",
-                            Role = "Cashier",
-                            StaffCode = "NV01"
-                        },
-                        new
-                        {
-                            StaffId = 2,
-                            BranchCode = "CS1",
-                            FullName = "Tran Thi Binh",
-                            Role = "Manager",
-                            StaffCode = "NV02"
-                        },
-                        new
-                        {
-                            StaffId = 3,
-                            BranchCode = "CS2",
-                            FullName = "Le Van Cuong",
-                            Role = "Chef",
-                            StaffCode = "NV03"
-                        });
                 });
 
             modelBuilder.Entity("FCanteen.Data.Entities.TicketLine", b =>
