@@ -13,6 +13,8 @@ namespace FCanteen.Data
         public DbSet<DeviceLog> DeviceLogs => Set<DeviceLog>();
         public DbSet<Ingredient> Ingredients => Set<Ingredient>();
         public DbSet<DailySettlement> DailySettlements => Set<DailySettlement>();
+        public DbSet<Staff> Staffs => Set<Staff>();
+        public DbSet<DiscountPolicyLog> DiscountPolicyLogs => Set<DiscountPolicyLog>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -35,7 +37,7 @@ namespace FCanteen.Data
                 new MenuItem { MenuItemId = 15, Name = "Chao ga",          Price = 30000, Unit = "to",   IsAvailable = true }
             );
 
-            // Seed nguyen lieu ban dau cho Lab 02
+            // Seed nguyen lieu
             modelBuilder.Entity<Ingredient>().HasData(
                 new Ingredient { IngredientId = 1, Name = "Gao Thom",       Unit = "kg",   StockQuantity = 500, WarningThreshold = 50 },
                 new Ingredient { IngredientId = 2, Name = "Thit Ga",        Unit = "kg",   StockQuantity = 200, WarningThreshold = 30 },
@@ -45,6 +47,13 @@ namespace FCanteen.Data
                 new Ingredient { IngredientId = 6, Name = "Sua Dac",        Unit = "lon",  StockQuantity = 400, WarningThreshold = 50 },
                 new Ingredient { IngredientId = 7, Name = "Banh Pho",       Unit = "kg",   StockQuantity = 80,  WarningThreshold = 15 },
                 new Ingredient { IngredientId = 8, Name = "Tra Den",        Unit = "kg",   StockQuantity = 50,  WarningThreshold = 10 }
+            );
+
+            // Seed Staff cho Lab 03
+            modelBuilder.Entity<Staff>().HasData(
+                new Staff { StaffId = 1, StaffCode = "NV01", FullName = "Nguyen Van An",  Role = "Cashier", BranchCode = "CS1" },
+                new Staff { StaffId = 2, StaffCode = "NV02", FullName = "Tran Thi Binh",  Role = "Manager", BranchCode = "CS1" },
+                new Staff { StaffId = 3, StaffCode = "NV03", FullName = "Le Van Cuong",   Role = "Chef",    BranchCode = "CS2" }
             );
         }
     }
