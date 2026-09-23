@@ -1,0 +1,80 @@
+﻿@model FCanteen.Web.ViewModels.MenuItemViewModel
+@{
+    ViewData["Title"] = "Chá»‰nh sá»­a mÃ³n Äƒn";
+    var categories = ViewData["Categories"] as SelectList;
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white py-3">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-pencil-square me-2"></i>Chá»‰nh sá»­a mÃ³n: @Model.Name</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Edit" method="post">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="MenuItemId" />
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger shadow-sm mb-3"></div>
+
+                    @if (Model.CalculatedCostPrice > 0)
+                    {
+                        <div class="alert alert-info py-2 mb-3">
+                            <i class="bi bi-info-circle me-1"></i>GiÃ¡ vá»‘n tÃ­nh tá»« nguyÃªn liá»‡u: <strong>@Model.CalculatedCostPrice.ToString("N0") VND</strong>.
+                            GiÃ¡ bÃ¡n tá»‘i thiá»ƒu há»£p lá»‡ (+20%): <strong>@((Model.CalculatedCostPrice * 1.2m).ToString("N0")) VND</strong>.
+                        </div>
+                    }
+
+                    <div class="mb-3">
+                        <label asp-for="ItemCode" class="form-label fw-bold"></label>
+                        <input asp-for="ItemCode" class="form-control font-monospace" />
+                        <span asp-validation-for="ItemCode" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label fw-bold"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label asp-for="CategoryId" class="form-label fw-bold"></label>
+                            <select asp-for="CategoryId" class="form-select" asp-items="categories">
+                                <option value="">-- Chá»n nhÃ³m mÃ³n --</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label asp-for="Unit" class="form-label fw-bold"></label>
+                            <input asp-for="Unit" class="form-control" />
+                            <span asp-validation-for="Unit" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Price" class="form-label fw-bold"></label>
+                        <div class="input-group">
+                            <input asp-for="Price" class="form-control text-end fw-bold" type="number" step="1000" />
+                            <span class="input-group-text">VND</span>
+                        </div>
+                        <span asp-validation-for="Price" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4 form-check form-switch">
+                        <input class="form-check-input" type="checkbox" asp-for="IsAvailable" />
+                        <label class="form-check-label fw-bold" asp-for="IsAvailable">Äang cÃ³ sáºµn Ä‘á»ƒ bÃ¡n (IsAvailable)</label>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Quay láº¡i danh sÃ¡ch</a>
+                        <button type="submit" class="btn btn-primary fw-bold px-4"><i class="bi bi-save me-1"></i>Cáº­p nháº­t</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

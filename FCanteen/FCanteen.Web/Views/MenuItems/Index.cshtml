@@ -1,0 +1,139 @@
+﻿@model FCanteen.Web.ViewModels.MenuItemIndexViewModel
+@{
+    ViewData["Title"] = "Quáº£n lÃ½ thá»±c Ä‘Æ¡n";
+    var categories = ViewData["Categories"] as SelectList;
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h2 class="card-title text-primary fw-bold mb-1">
+                    <i class="bi bi-journal-text me-2"></i>Danh má»¥c thá»±c Ä‘Æ¡n cÄƒng tin
+                </h2>
+                <p class="text-muted mb-0">Tá»•ng sá»‘ mÃ³n hiá»‡n cÃ³: <strong class="text-dark">@ViewBag.TotalItemsCount</strong> mÃ³n</p>
+            </div>
+            <a asp-action="Create" class="btn btn-success fw-bold px-3 py-2 shadow-sm">
+                <i class="bi bi-plus-circle me-1"></i>ThÃªm mÃ³n má»›i
+            </a>
+        </div>
+
+        <!-- FORM TIM KIEM VA LOC (YC3) -->
+        <form method="get" asp-action="Index" class="row g-2 p-3 bg-light rounded-3 border mb-4">
+            <input type="hidden" name="sortBy" value="@ViewBag.CurrentSortBy" />
+            <input type="hidden" name="sortOrder" value="@ViewBag.CurrentSortOrder" />
+
+            <div class="col-md-4">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" name="searchString" value="@Model.SearchString" class="form-control" placeholder="TÃ¬m theo tÃªn hoáº·c mÃ£ mÃ³n (VD: MON-0001)..." />
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <select name="categoryId" class="form-select" asp-items="categories">
+                    <option value="">-- Táº¥t cáº£ nhÃ³m mÃ³n --</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select name="isAvailable" class="form-select">
+                    <option value="">-- Táº¥t cáº£ tráº¡ng thÃ¡i --</option>
+                    <option value="true" selected="@(Model.IsAvailable == true)">Chá»‰ mÃ³n Äang bÃ¡n</option>
+                    <option value="false" selected="@(Model.IsAvailable == false)">Chá»‰ mÃ³n Táº¡m ngÆ°ng</option>
+                </select>
+            </div>
+
+            <div class="col-md-2 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100 fw-semibold">
+                    <i class="bi bi-funnel me-1"></i>Lá»c
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary" title="XÃ³a bá»™ lá»c">
+                    <i class="bi bi-arrow-counterclockwise"></i>
+                </a>
+            </div>
+        </form>
+
+        <!-- BANG DANH SACH MON AN (YC3: SAP XEP) -->
+        <div class="table-responsive">
+            <table class="table table-hover align-middle table-bordered mb-0">
+                <thead class="table-primary text-nowrap">
+                    <tr>
+                        <th style="width: 120px;">
+                            <a asp-action="Index" asp-route-sortBy="ItemCode" asp-route-sortOrder="@(ViewBag.CurrentSortBy == "ItemCode" ? ViewBag.NextNameSortOrder : "asc")" asp-route-searchString="@Model.SearchString" asp-route-categoryId="@Model.CategoryId" asp-route-isAvailable="@Model.IsAvailable" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                MÃ£ mÃ³n <i class="bi bi-arrow-down-up text-muted"></i>
+                            </a>
+                        </th>
+                        <th>
+                            <a asp-action="Index" asp-route-sortBy="Name" asp-route-sortOrder="@ViewBag.NextNameSortOrder" asp-route-searchString="@Model.SearchString" asp-route-categoryId="@Model.CategoryId" asp-route-isAvailable="@Model.IsAvailable" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                TÃªn mÃ³n Äƒn <i class="bi bi-arrow-down-up text-muted"></i>
+                            </a>
+                        </th>
+                        <th>NhÃ³m mÃ³n</th>
+                        <th style="width: 140px;">
+                            <a asp-action="Index" asp-route-sortBy="Price" asp-route-sortOrder="@ViewBag.NextPriceSortOrder" asp-route-searchString="@Model.SearchString" asp-route-categoryId="@Model.CategoryId" asp-route-isAvailable="@Model.IsAvailable" class="text-dark text-decoration-none d-flex justify-content-between align-items-center">
+                                GiÃ¡ bÃ¡n <i class="bi bi-arrow-down-up text-muted"></i>
+                            </a>
+                        </th>
+                        <th style="width: 140px;">GiÃ¡ vá»‘n Æ°á»›c tÃ­nh</th>
+                        <th style="width: 100px;">ÄÆ¡n vá»‹</th>
+                        <th style="width: 120px;" class="text-center">Tráº¡ng thÃ¡i</th>
+                        <th style="width: 240px;" class="text-center">Thao tÃ¡c</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Items.Count == 0)
+                    {
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                <i class="bi bi-inbox fs-2 d-block mb-2"></i>KhÃ´ng tÃ¬m tháº¥y mÃ³n Äƒn nÃ o phÃ¹ há»£p vá»›i Ä‘iá»u kiá»‡n tÃ¬m kiáº¿m.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model.Items)
+                        {
+                            <tr>
+                                <td class="fw-bold font-monospace text-primary">@item.ItemCode</td>
+                                <td class="fw-semibold">@item.Name</td>
+                                <td><span class="badge bg-secondary">@item.CategoryName</span></td>
+                                <td class="text-end fw-bold text-success">@item.Price.ToString("N0") Ä‘</td>
+                                <td class="text-end text-muted">
+                                    @(item.CalculatedCostPrice > 0 ? $"{item.CalculatedCostPrice:N0} Ä‘" : "ChÆ°a cÃ³ Ä‘á»‹nh lÆ°á»£ng")
+                                </td>
+                                <td>@item.Unit</td>
+                                <td class="text-center">
+                                    @if (item.IsAvailable)
+                                    {
+                                        <span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>CÃ²n bÃ¡n</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger"><i class="bi bi-slash-circle me-1"></i>Táº¡m ngÆ°ng</span>
+                                    }
+                                </td>
+                                <td class="text-center text-nowrap">
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="AssignIngredients" asp-route-id="@item.MenuItemId" class="btn btn-outline-warning" title="GÃ¡n Ä‘á»‹nh lÆ°á»£ng nguyÃªn liá»‡u">
+                                            <i class="bi bi-egg-fried"></i> Äá»‹nh lÆ°á»£ng
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.MenuItemId" class="btn btn-outline-info" title="Chi tiáº¿t">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.MenuItemId" class="btn btn-outline-primary" title="Sá»­a">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.MenuItemId" class="btn btn-outline-danger" title="XÃ³a">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

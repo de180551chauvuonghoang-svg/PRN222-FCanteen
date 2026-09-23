@@ -1,0 +1,79 @@
+﻿@model FCanteen.Web.ViewModels.MenuItemViewModel
+@{
+    ViewData["Title"] = "Chi tiáº¿t mÃ³n Äƒn";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-info text-white py-3 d-flex justify-content-between align-items-center">
+                <h4 class="mb-0 fw-bold"><i class="bi bi-info-circle me-2"></i>ThÃ´ng tin chi tiáº¿t mÃ³n Äƒn</h4>
+                <span class="badge bg-light text-dark fs-6 font-monospace">@Model.ItemCode</span>
+            </div>
+            <div class="card-body p-4">
+                <table class="table table-bordered mb-4">
+                    <tr>
+                        <th class="table-light" style="width: 30%;">TÃªn mÃ³n</th>
+                        <td class="fw-bold fs-5 text-primary">@Model.Name</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">NhÃ³m mÃ³n</th>
+                        <td><span class="badge bg-secondary">@Model.CategoryName</span></td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">GiÃ¡ bÃ¡n niÃªm yáº¿t</th>
+                        <td class="fw-bold text-success fs-5">@Model.Price.ToString("N0") VND / @Model.Unit</td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">GiÃ¡ vá»‘n tÃ­nh tá»« nguyÃªn liá»‡u</th>
+                        <td class="fw-bold text-danger">
+                            @(Model.CalculatedCostPrice > 0 ? $"{Model.CalculatedCostPrice:N0} VND" : "ChÆ°a cáº¥u hÃ¬nh Ä‘á»‹nh lÆ°á»£ng")
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Tá»· suáº¥t lá»£i nhuáº­n gá»™p</th>
+                        <td>
+                            @if (Model.CalculatedCostPrice > 0)
+                            {
+                                decimal profit = Model.Price - Model.CalculatedCostPrice;
+                                decimal margin = (profit / Model.CalculatedCostPrice) * 100;
+                                <span class="badge @(margin >= 20 ? "bg-success" : "bg-warning") fs-6">
+                                    +@margin.ToString("F1")% (@profit.ToString("N0") VND)
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="text-muted">KhÃ´ng xÃ¡c Ä‘á»‹nh</span>
+                            }
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="table-light">Tráº¡ng thÃ¡i bÃ¡n</th>
+                        <td>
+                            @if (Model.IsAvailable)
+                            {
+                                <span class="badge bg-success">Äang cÃ³ sáºµn Ä‘á»ƒ bÃ¡n</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Táº¡m ngÆ°ng phá»¥c vá»¥</span>
+                            }
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-1"></i>Quay láº¡i danh sÃ¡ch</a>
+                    <div>
+                        <a asp-action="AssignIngredients" asp-route-id="@Model.MenuItemId" class="btn btn-warning fw-bold me-2">
+                            <i class="bi bi-egg-fried me-1"></i>GÃ¡n Ä‘á»‹nh lÆ°á»£ng nguyÃªn liá»‡u
+                        </a>
+                        <a asp-action="Edit" asp-route-id="@Model.MenuItemId" class="btn btn-primary fw-bold">
+                            <i class="bi bi-pencil-square me-1"></i>Chá»‰nh sá»­a
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+﻿@model List<FCanteen.Web.ViewModels.CartItemViewModel>
+@{
+    ViewData["Title"] = "Giá» Ä‘áº·t hÃ ng nguyÃªn liá»‡u (Session)";
+}
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-header bg-warning text-dark py-3">
+        <h4 class="mb-0 fw-bold"><i class="bi bi-cart-check me-2"></i>Giá» hÃ ng Ä‘áº·t nguyÃªn liá»‡u nhÃ  cung cáº¥p (LÆ°u trong Session)</h4>
+    </div>
+    <div class="card-body p-4">
+        @if (Model.Count == 0)
+        {
+            <div class="text-center py-5 text-muted">
+                <i class="bi bi-cart-x fs-1 d-block mb-3 text-secondary"></i>
+                <h5>Giá» hÃ ng cá»§a báº¡n Ä‘ang trá»‘ng!</h5>
+                <p>HÃ£y vÃ o kho nguyÃªn liá»‡u Ä‘á»ƒ chá»n cÃ¡c nguyÃªn liá»‡u cáº§n nháº­p thÃªm cho báº¿p.</p>
+                <a asp-action="IngredientsList" class="btn btn-primary fw-semibold mt-2">
+                    <i class="bi bi-plus-circle me-1"></i>Chá»n nguyÃªn liá»‡u ngay
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive mb-4">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>TÃªn nguyÃªn liá»‡u</th>
+                            <th>NhÃ  cung cáº¥p</th>
+                            <th class="text-end" style="width: 140px;">ÄÆ¡n giÃ¡ nháº­p</th>
+                            <th style="width: 220px;" class="text-center">Sá»‘ lÆ°á»£ng nháº­p</th>
+                            <th class="text-end" style="width: 160px;">ThÃ nh tiá»n</th>
+                            <th style="width: 80px;" class="text-center">XÃ³a</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="fw-bold">@item.IngredientName</td>
+                                <td><span class="badge bg-secondary">@item.SupplierName</span></td>
+                                <td class="text-end">@item.UnitPrice.ToString("N0") Ä‘ / @item.Unit</td>
+                                <td class="text-center">
+                                    <form asp-action="UpdateQuantity" method="post" class="d-flex gap-1 justify-content-center">
+                                        <input type="hidden" name="ingredientId" value="@item.IngredientId" />
+                                        <input type="number" name="quantity" value="@item.Quantity" min="1" step="1" class="form-control form-control-sm text-end" style="width: 90px;" />
+                                        <button type="submit" class="btn btn-sm btn-outline-primary" title="Cáº­p nháº­t">
+                                            <i class="bi bi-arrow-repeat"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="text-end fw-bold text-danger">@item.Total.ToString("N0") Ä‘</td>
+                                <td class="text-center">
+                                    <form asp-action="RemoveFromCart" method="post">
+                                        <input type="hidden" name="ingredientId" value="@item.IngredientId" />
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="XÃ³a khá»i giá»">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <td colspan="4" class="text-end fw-bold fs-5">Tá»”NG TIá»€N Äáº¶T HÃ€NG:</td>
+                            <td class="text-end fw-bold fs-5 text-danger">@Model.Sum(i => i.Total).ToString("N0") VND</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <a asp-action="IngredientsList" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Tiáº¿p tá»¥c chá»n thÃªm nguyÃªn liá»‡u
+                </a>
+                <form asp-action="Checkout" method="post">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-success fw-bold px-4 py-2 shadow-sm">
+                        <i class="bi bi-check2-circle me-1"></i>XÃ¡c nháº­n Ä‘áº·t hÃ ng (LÆ°u DB & XÃ³a Session)
+                    </button>
+                </form>
+            </div>
+        }
+    </div>
+</div>
